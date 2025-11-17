@@ -4,6 +4,7 @@ using UnityEngine;
 public class EnemyAnimation : MonoBehaviour
 {
     private Animator animator;
+    private Enemy enemy;
 
     public string[] idleDirections = { "N idle", "NW idle", "W idle", "SW idle", "S idle", "SE idle", "E idle", "NE idle" };
     public string[] walkDirections = { "N walk", "NW walk", "W walk", "SW walk", "S walk", "SE walk", "E walk", "NE walk" };
@@ -13,7 +14,7 @@ public class EnemyAnimation : MonoBehaviour
     private int lastDirection = 4;
     private bool isAttacking = false;
 
-    private bool isDead = false;
+    public bool isDead = false;
     public bool IsDead => isDead;
 
     public bool IsAttacking => isAttacking;
@@ -23,7 +24,6 @@ public class EnemyAnimation : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    // Chamada pelo script Enemy.cs
     public void SetDirection(Vector2 direction)
     {
         if (isAttacking) return;
@@ -74,7 +74,6 @@ public class EnemyAnimation : MonoBehaviour
         GameManager.instance?.AddKill();
         GameManager.instance.ShowKillPopup();
 
-
         StartCoroutine(FreezeAndDestroy());
     }
 
@@ -84,7 +83,6 @@ public class EnemyAnimation : MonoBehaviour
         yield return new WaitForSeconds(duration);
 
         animator.speed = 0f;
-    
 
         yield return new WaitForSeconds(5f);
 

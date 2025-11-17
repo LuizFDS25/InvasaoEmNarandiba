@@ -27,7 +27,7 @@ public class PlayerAnimation : MonoBehaviour
 
     public void SetDirection(Vector2 _direction)
     {
-        // não atualiza direção enquanto está atacando
+     
         if (isAttacking) return;
 
         string[] directionArray;
@@ -52,7 +52,6 @@ public class PlayerAnimation : MonoBehaviour
 
         animator.Play(attackDirections[lastDirection]);
 
-        // Ativa a hitbox, na direção atual
         if (hitbox != null)
         {
             Vector2 dir = IndexToDirection(lastDirection);
@@ -87,6 +86,7 @@ public class PlayerAnimation : MonoBehaviour
         yield return new WaitForSeconds(duration);
 
         animator.speed = 0f;
+        GameManager.instance?.GameOver();
     }
 
     public void SwitchAnimatorController(RuntimeAnimatorController newController)
@@ -94,8 +94,6 @@ public class PlayerAnimation : MonoBehaviour
         animator.runtimeAnimatorController = newController;
         animator.Play(idleDirections[lastDirection]);
     }
-
-
 
     private int DirectionToIndex(Vector2 _direction)
     {

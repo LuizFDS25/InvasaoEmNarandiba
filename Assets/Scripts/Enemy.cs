@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviour
     private bool canAttack = true;
 
     private Rigidbody2D rb;
-    private EnemyAnimation anim;
+    public EnemyAnimation anim;
     private BoxCollider2D boxCollider;
 
     private SpriteRenderer spriteRenderer;
@@ -29,6 +29,8 @@ public class Enemy : MonoBehaviour
     public GameObject hitParticlesPrefab;
 
     private bool isVisible = false;
+
+    public bool fazParteDaHorda = false;
 
     private void Awake()
     {
@@ -46,7 +48,6 @@ public class Enemy : MonoBehaviour
         if (alvo != null)
             playerHealth = alvo.GetComponent<PlayerHealth>();
 
-        // cria o collider de detecção
         GameObject detectObj = new GameObject("DetectionArea");
         detectObj.transform.parent = this.transform;
         detectObj.transform.localPosition = Vector3.zero;
