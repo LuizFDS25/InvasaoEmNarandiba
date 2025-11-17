@@ -8,7 +8,8 @@ public class PlayerMovement : MonoBehaviour
     private PlayerAnimation playerAnim;
 
     private float moveH, moveV;
-    [SerializeField] private float moveSpeed = 1.0f;
+    public float moveSpeed = 1.0f;
+
 
     private void Awake()
     {

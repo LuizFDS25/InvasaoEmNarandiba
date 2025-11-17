@@ -71,6 +71,10 @@ public class EnemyAnimation : MonoBehaviour
 
         animator.Play(deathDirections[lastDirection]);
 
+        GameManager.instance?.AddKill();
+        GameManager.instance.ShowKillPopup();
+
+
         StartCoroutine(FreezeAndDestroy());
     }
 
@@ -80,6 +84,7 @@ public class EnemyAnimation : MonoBehaviour
         yield return new WaitForSeconds(duration);
 
         animator.speed = 0f;
+    
 
         yield return new WaitForSeconds(5f);
 

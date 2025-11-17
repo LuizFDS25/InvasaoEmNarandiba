@@ -11,7 +11,6 @@ public class PlayerHealth : MonoBehaviour
     private PlayerMovement playerMove;
 
     private SpriteRenderer spriteRenderer;
-    private Color originalColor;
     public float hitFlashDuration = 0.1f;
 
     private bool isDead = false;
@@ -27,6 +26,12 @@ public class PlayerHealth : MonoBehaviour
     private void Start()
     {
         currentHealth = maxHealth;
+        UpdateHUD();
+    }
+
+    private void UpdateHUD()
+    {
+        GameManager.instance?.UpdateHealthBar(currentHealth, maxHealth);
     }
 
     public void TakeDamage(int dmg)
@@ -34,15 +39,16 @@ public class PlayerHealth : MonoBehaviour
         if (isDead) return;
 
         currentHealth -= dmg;
+        currentHealth = Mathf.Max(0, currentHealth);
+
         StartCoroutine(FlashRed());
-        Debug.Log("Player took " + dmg + " damage. Current health: " + currentHealth);
+        UpdateHUD();
+
         if (currentHealth <= 0)
-        {
             Die();
-        }
     }
 
-    IEnumerator FlashRed()
+    private IEnumerator FlashRed()
     {
         spriteRenderer.color = Color.red;
         yield return new WaitForSeconds(hitFlashDuration);
@@ -53,15 +59,9 @@ public class PlayerHealth : MonoBehaviour
     {
         isDead = true;
 
-        // para completamente
         rb.velocity = Vector2.zero;
 
-        // toca animação
-        if (playerAnim != null)
-            playerAnim.Die();
-
-        // desliga o movimento do player
-        if (playerMove != null)
-            playerMove.enabled = false;
+        if (playerAnim != null) playerAnim.Die();
+        if (playerMove != null) playerMove.enabled = false;
     }
 }

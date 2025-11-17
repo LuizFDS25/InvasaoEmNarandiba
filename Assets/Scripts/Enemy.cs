@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 public class Enemy : MonoBehaviour
 {
@@ -21,10 +20,15 @@ public class Enemy : MonoBehaviour
 
     private Rigidbody2D rb;
     private EnemyAnimation anim;
+    private BoxCollider2D boxCollider;
 
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
     public float hitFlashDuration = 0.5f;
+
+    public GameObject hitParticlesPrefab;
+
+    private bool isVisible = false;
 
     private void Awake()
     {
@@ -39,35 +43,59 @@ public class Enemy : MonoBehaviour
         if (spriteRenderer != null)
             originalColor = spriteRenderer.color;
 
-        // pega vida do player
         if (alvo != null)
             playerHealth = alvo.GetComponent<PlayerHealth>();
 
         // cria o collider de detecção
-        // cria um objeto filho para área de detecção
         GameObject detectObj = new GameObject("DetectionArea");
         detectObj.transform.parent = this.transform;
         detectObj.transform.localPosition = Vector3.zero;
 
-        // adiciona collider de detecção no filho
         CircleCollider2D detection = detectObj.AddComponent<CircleCollider2D>();
         detection.isTrigger = true;
         detection.radius = detectionRadius;
 
-        // adiciona script relay para chamar OnTriggerEnter/Exit no Enemy
         DetectionRelay relay = detectObj.AddComponent<DetectionRelay>();
         relay.enemy = this;
+    }
 
+    void Start()
+    {
+        if (alvo == null)
+        {
+            GameObject p = GameObject.FindGameObjectWithTag("Player");
+            if (p != null)
+            {
+                alvo = p.transform;
+                playerHealth = p.GetComponent<PlayerHealth>();
+            }
+        }
+        else
+        {
+            playerHealth = alvo.GetComponent<PlayerHealth>();
+        }
+    }
+
+
+    void Update()
+    {
+        CheckVisibility();
     }
 
     private void FixedUpdate()
     {
+        if (!isVisible)
+        {
+            rb.velocity = Vector2.zero;
+            anim.SetDirection(Vector2.zero);
+            return;
+        }
+
         if (alvo == null)
             return;
 
         if (!playerDetected)
         {
-            // inimigo parado esperando o player entrar na área
             rb.velocity = Vector2.zero;
             anim.SetDirection(Vector2.zero);
             return;
@@ -93,6 +121,17 @@ public class Enemy : MonoBehaviour
 
             TryAttack();
         }
+    }
+    private void CheckVisibility()
+    {
+        Vector3 p = Camera.main.WorldToViewportPoint(transform.position);
+
+        bool visible =
+            p.x > 0 && p.x < 1 &&
+            p.y > 0 && p.y < 1 &&
+            p.z > 0;
+
+        isVisible = visible;
     }
 
     private void TryAttack()
@@ -137,7 +176,9 @@ public class Enemy : MonoBehaviour
 
     IEnumerator FlashRed()
     {
+        yield return new WaitForSeconds(0.5f);
         spriteRenderer.color = Color.red;
+        Instantiate(hitParticlesPrefab, transform.position, Quaternion.identity);
         yield return new WaitForSeconds(hitFlashDuration);
         spriteRenderer.color = originalColor;
     }

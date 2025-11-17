@@ -89,6 +89,13 @@ public class PlayerAnimation : MonoBehaviour
         animator.speed = 0f;
     }
 
+    public void SwitchAnimatorController(RuntimeAnimatorController newController)
+    {
+        animator.runtimeAnimatorController = newController;
+        animator.Play(idleDirections[lastDirection]);
+    }
+
+
 
     private int DirectionToIndex(Vector2 _direction)
     {

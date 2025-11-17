@@ -203,6 +203,7 @@ MonoBehaviour:
   detectionRadius: 2
   playerDetected: 0
   hitFlashDuration: 0.1
+  hitParticlesPrefab: {fileID: 116792021713598715, guid: f04590c80d7e6784ba5c7ea4c0218a74, type: 3}
 --- !u!114 &5354756695899517371
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -18,7 +18,12 @@ public class Hitbox : MonoBehaviour
         {
             Enemy enemy = other.GetComponent<Enemy>();
             if (enemy != null)
+                
             enemy.TakeDamage(damage);
+
+            RageSystem rage = transform.root.GetComponent<RageSystem>();
+            if (rage != null)
+                rage.AddRage(rage.ragePerHit);
         }
     }
 
@@ -30,12 +35,9 @@ public class Hitbox : MonoBehaviour
         float scaleFactor = Mathf.Max(transform.parent.localScale.x, transform.parent.localScale.y);
         transform.localPosition = facingDir.normalized * distance * scaleFactor;
 
-
-        // Gira para a direção do ataque
         float angle = Mathf.Atan2(facingDir.y, facingDir.x) * Mathf.Rad2Deg;
         transform.localRotation = Quaternion.Euler(0, 0, angle - 90);
 
-        // Desativa após o tempo
         CancelInvoke();
         Invoke(nameof(Deactivate), activeTime);
     }
