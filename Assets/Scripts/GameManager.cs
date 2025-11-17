@@ -53,9 +53,9 @@ public class GameManager : MonoBehaviour
 
 
     // Timer
-    public float tempoMaximo = 300f;   // 5min
+    public float tempoMaximo = 300f;
     private float tempoRestante;
-    public TextMeshProUGUI timerText;
+    public TextMeshProUGUI timerText;   
 
     private bool jogoVencido = false;
     private bool jogoAcabou = false;
